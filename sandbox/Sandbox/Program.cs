@@ -1,13 +1,20 @@
 using System;
 using System.Globalization;
+namespace Sandbox;
 
 class Program
 {
     static void Main(string[] args)
     {
-        string randomWords = "hello sandbox world!!";
-        TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
-        string capitalized = textInfo.ToTitleCase(randomWords);
-        Console.WriteLine(capitalized);
+        Bin twentyBin = new Bin("Twenties", 20.00, 5);
+        Bin tenBin = new Bin("Ten", 10.00, 10);
+        // and so on
+        Bin pennyBin = new Bin("Pennies", 0.001, 50);
+
+
+        pennyBin.Alter(11);
+        Console.WriteLine(pennyBin.GetDenomintation());
+        Console.WriteLine(pennyBin.GetCount());
+
     }
 }
