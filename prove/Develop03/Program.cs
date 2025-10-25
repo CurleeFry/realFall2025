@@ -5,6 +5,9 @@ class Program
 {
     static void Main()
     {
+        // My creativity I added was a startup menu that allows you to pick between 3 different scriptures to learn, 
+        // and then once you run through the base program of memorizing that scripture it returns you to the menu to 
+        // try again, try another scripture or just quit. It's nice because it allows for more than just 3.
         bool running = true;
 
         // Different scripture options
