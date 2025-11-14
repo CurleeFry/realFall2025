@@ -1,41 +1,25 @@
 using System;
-using System.Threading;
 
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        Console.CursorVisible = false;
-        PlayLoadingAnimation(5); // play it 5 times
-        Console.CursorVisible = true;
+        List<Shape> shapes = new List<Shape>();
 
-        Console.WriteLine("\nDone!");
-    }
+        Square first = new Square("Purple", 7);
+        shapes.Add(first);
 
-    static void PlayLoadingAnimation(int repeatCount)
-    {
-        string[] frames = {
-            "OOOOooo",
-            "oOOOOoo",
-            "ooOOOOo",
-            "oooOOOO",
-            "OoooOOO",
-            "OOoooOO",
-            "OOOoooO"
-        };
+        Rectangle second = new Rectangle("Green", 3, 4);
+        shapes.Add(second);
 
-        int delay = 150; // milliseconds between frames
+        Circle third = new Circle("Black", 50);
+        shapes.Add(third);
 
-        for (int i = 0; i < repeatCount; i++)
+        foreach (Shape s in shapes)
         {
-            foreach (string frame in frames)
-            {
-                Console.Write($"\r{frame} ");
-                Thread.Sleep(delay);
-            }
+            string color = s.GetColor();
+            double area = s.GetArea();
+            Console.WriteLine($"Your {color} {s.ToString()} has an area of {area}.");
         }
-
-        // clear the line when done
-        Console.Write("\r" + new string(' ', 20) + "\r");
     }
 }
