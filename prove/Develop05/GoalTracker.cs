@@ -1,5 +1,6 @@
 using System;
 
+// I think I forgot to add a bonus thing in this week, whoops. That being said I did learn about what a switch is this week and that's pretty cool 
 class GoalTracker
 {
     private List<Goal> _goals;
