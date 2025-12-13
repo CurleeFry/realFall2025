@@ -28,32 +28,93 @@ public class Inventory
 
     public void SellMenu()
     {
-        Console.Clear();
-        Console.WriteLine("SELL ITEMS");
-        Console.WriteLine("Select index to sell, ESC to exit");
-
-        for (int i = 0; i < Items.Count; i++)
+        while (true)
         {
-            Console.WriteLine($"[{i}] {Items[i].Name} ({Items[i].Value} coins)");
+            Console.Clear();
+            Console.WriteLine("=== SELL ITEMS ===");
+            Console.WriteLine($"Coins: {Coins}\n");
+
+            if (Items.Count == 0)
+            {
+                Console.WriteLine("You have nothing to sell.");
+                Console.WriteLine("\nPress any key to return.");
+                Console.ReadKey(true);
+                return;
+            }
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                Console.WriteLine($"[{i:D2}] {Items[i].Name} ({Items[i].Rarity}) - {Items[i].Value} coins");
+            }
+
+            Console.WriteLine("\nEnter item number to sell (00–99)");
+            Console.WriteLine("ESC to return");
+
+            string input = ReadNumberOrEscape();
+            if (input == null)
+                return;
+
+            if (!int.TryParse(input, out int index) || index < 0 || index >= Items.Count)
+            {
+                Console.WriteLine("Invalid selection.");
+                Pause();
+                continue;
+            }
+
+            Item item = Items[index];
+
+            if (IsHighRarity(item))
+            {
+                Console.WriteLine($"\n⚠ WARNING: {item.Rarity} item!");
+                Console.WriteLine($"Sell {item.Name} for {item.Value} coins? (Y/N)");
+
+                var confirm = Console.ReadKey(true).Key;
+                if (confirm != ConsoleKey.Y)
+                    continue;
+            }
+
+            Coins += item.Value;
+            Items.RemoveAt(index);
+
+            Console.WriteLine("\nItem sold.");
+            Pause();
         }
+    }
+
+    private string ReadNumberOrEscape()
+    {
+        string buffer = "";
 
         while (true)
         {
-            var key = Console.ReadKey(true).Key;
-            if (key == ConsoleKey.Escape) return;
+            var key = Console.ReadKey(true);
 
-            if (char.IsDigit((char)key))
+            if (key.Key == ConsoleKey.Escape)
+                return null;
+
+            if (key.Key == ConsoleKey.Enter)
+                return buffer;
+
+            if (char.IsDigit(key.KeyChar) && buffer.Length < 2)
             {
-                int idx = (int)char.GetNumericValue((char)key);
-                if (idx >= 0 && idx < Items.Count)
-                {
-                    Coins += Items[idx].Value;
-                    Items.RemoveAt(idx);
-                    return;
-                }
+                buffer += key.KeyChar;
+                Console.Write(key.KeyChar);
             }
         }
     }
+    private bool IsHighRarity(Item item)
+    {
+        return item.Rarity == "PINK"
+            || item.Rarity == "RED"
+            || item.Rarity == "GOLD";
+    }
+
+    private void Pause()
+    {
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
+    }
+
 
     public void SeeInv()
     {
@@ -68,10 +129,6 @@ public class Inventory
         Console.WriteLine("\nPress ESC to exit inventory.");
         while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
     }
-
-    // ===============================
-    // ✅ SAVE SYSTEM
-    // ===============================
 
     public void SaveToFile(string filename)
     {

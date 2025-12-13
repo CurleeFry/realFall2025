@@ -158,27 +158,29 @@ public class Map
 
     private void Shop()
     {
-        Console.Clear();
-        Console.WriteLine("SHOP");
-        Console.WriteLine("1) Buy Seed (3 coins)");
-        Console.WriteLine("2) Buy Lucky Seed (15 coins)");
-        Console.WriteLine("3) Sell Items");
-        Console.WriteLine("ESC) Exit");
-
         while (true)
         {
+            Console.Clear();
+            Console.WriteLine("=== SHOP ===");
+            Console.WriteLine($"Coins: {Character.PlayerInventory.Coins}\n");
+
+            Console.WriteLine("1) Buy Seed (3 coins)");
+            Console.WriteLine("2) Buy Lucky Seed (15 coins)");
+            Console.WriteLine("3) Sell Items");
+            Console.WriteLine("ESC) Exit");
+
             var key = Console.ReadKey(true).Key;
-            if (key == ConsoleKey.Escape) return;
+
+            if (key == ConsoleKey.Escape)
+                return;
 
             if (key == ConsoleKey.D1)
             {
-                if (Character.PlayerInventory.BuyItem("Seed", 3))
-                    Console.WriteLine("Bought a seed.");
+                AttemptPurchase("Seed", 3);
             }
             else if (key == ConsoleKey.D2)
             {
-                if (Character.PlayerInventory.BuyItem("LuckySeed", 15))
-                    Console.WriteLine("Bought a lucky seed.");
+                AttemptPurchase("LuckySeed", 15);
             }
             else if (key == ConsoleKey.D3)
             {
@@ -186,4 +188,22 @@ public class Map
             }
         }
     }
+    private void AttemptPurchase(string item, int cost)
+    {
+        Console.Clear();
+
+        if (Character.PlayerInventory.BuyItem(item, cost))
+        {
+            Console.WriteLine($"Purchased {item} for {cost} coins.");
+        }
+        else
+        {
+            Console.WriteLine("Not enough coins.");
+        }
+
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey(true);
+    }
+
+
 }
