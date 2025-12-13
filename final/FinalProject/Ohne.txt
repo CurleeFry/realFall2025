@@ -1,0 +1,21 @@
+0,0,0
+strawberry,BLUE,Jumbo,Fair
+strawberry,BLUE,Small,Fresh
+corn,PURPLE,Normal,Slightly Bruised
+squash,BLUE,Small,Super Fresh
+zucchini,BLUE,Normal,Normal
+pepper,BLUE,Normal,Squishy
+carrot,BLUE,Large,Normal
+pepper,BLUE,Normal,Normal
+strawberry,PURPLE,Large,Fresh
+zucchini,BLUE,Large,Fresh
+carrot,PURPLE,Normal-Large,Bruised
+carrot,BLUE,Jumbo,Super Fresh
+corn,BLUE,Large,Slightly Bruised
+strawberry,BLUE,Normal-Small,Fair
+strawberry,GOLD,Jumbo,Super Fresh
+carrot,BLUE,Small,Super Fresh
+blueberry,GOLD,Jumbo,Fair
+pepper,BLUE,Normal-Small,Squishy
+pepper,BLUE,Normal-Large,Fresh
+tomato,BLUE,Normal-Small,Fresh

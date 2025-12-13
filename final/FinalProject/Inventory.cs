@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class Inventory
 {
@@ -61,25 +63,58 @@ public class Inventory
         Console.WriteLine($"Lucky Seeds: {LuckySeeds}\n");
 
         foreach (var i in Items)
-        {
             i.Display();
-        }
 
         Console.WriteLine("\nPress ESC to exit inventory.");
         while (Console.ReadKey(true).Key != ConsoleKey.Escape) { }
+    }
+
+    // ===============================
+    // ✅ SAVE SYSTEM
+    // ===============================
+
+    public void SaveToFile(string filename)
+    {
+        List<string> lines = new List<string>();
+
+        // Header line: coins,seeds,luckySeeds
+        lines.Add($"{Coins},{Seeds},{LuckySeeds}");
+
+        // Each item: name,rarity,size,condition
+        foreach (var item in Items)
+        {
+            lines.Add($"{item.Name},{item.Rarity},{item.Size},{item.Condition}");
+        }
+
+        File.WriteAllLines(filename, lines);
     }
 
     public static Inventory FromCSV(string[] lines)
     {
         Inventory inv = new Inventory();
 
-        foreach (string line in lines)
-        {
-            var parts = line.Split(',');
-            if (parts.Length < 5) continue;
+        if (lines.Length == 0)
+            return inv;
 
-            inv.Items.Add(new Item(parts[0], parts[1], parts[2], parts[3]));
-            inv.Coins = int.Parse(parts[4]);
+        // First line = inventory stats
+        var header = lines[0].Split(',');
+        inv.Coins = int.Parse(header[0]);
+        inv.Seeds = int.Parse(header[1]);
+        inv.LuckySeeds = int.Parse(header[2]);
+
+        // Remaining lines = items
+        for (int i = 1; i < lines.Length; i++)
+        {
+            var parts = lines[i].Split(',');
+            if (parts.Length == 4)
+            {
+                inv.Items.Add(new Item(
+                    parts[0],
+                    parts[1],
+                    parts[2],
+                    parts[3]
+                ));
+            }
         }
 
         return inv;

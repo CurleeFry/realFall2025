@@ -1,22 +1,24 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class Map
 {
     private List<Tile> _tiles = new List<Tile>();
     private Character _character;
 
-    public Map()
+    public Map(Character character)
     {
-        _character = new Character(5, 5);
+        _character = character;
 
         for (int y = 0; y < 10; y++)
         {
             for (int x = 0; x < 20; x++)
             {
-                if (x == 0 || x == 19 || y == 0 || y == 9)
-                    _tiles.Add(new Fence(x, y));
-                else if (x == 10 && y == 9)
+                if (x == 10 && y == 9)
                     _tiles.Add(new Gate(x, y));
+                else if (x == 0 || x == 19 || y == 0 || y == 9)
+                    _tiles.Add(new Fence(x, y));
                 else if (x == 3 && y == 3)
                     _tiles.Add(new Tent(x, y));
                 else
@@ -41,7 +43,15 @@ public class Map
             Console.WriteLine();
         }
 
-        Console.WriteLine("WASD = Move • E = Harvest • Q = Water • 1 = Plant Seed • 2 = Plant Lucky • I = Inventory • O = Shop");
+        Console.WriteLine(
+            "WASD Move | E Harvest | Q Water | 1 Seed | 2 Lucky | I Inventory | O Shop | ` Save"
+        );
+    }
+
+    public bool IsPassable(int x, int y)
+    {
+        Tile t = GetTile(x, y);
+        return t != null && t.CanPass;
     }
 
     public void Interact(ConsoleKey key)
@@ -52,7 +62,7 @@ public class Map
             case ConsoleKey.A:
             case ConsoleKey.S:
             case ConsoleKey.D:
-                _character.Move(key);
+                _character.Move(key, this);
                 break;
 
             case ConsoleKey.Q:
@@ -82,39 +92,22 @@ public class Map
             case ConsoleKey.Spacebar:
                 CheckInteractables();
                 break;
+
+            case ConsoleKey.Oem3: // `
+                SaveGame();
+                break;
         }
     }
 
-    public void Shop()
+    private void SaveGame()
     {
-        Console.Clear();
-        Console.WriteLine("SHOP");
-        Console.WriteLine("1) Buy Seed (3 coins)");
-        Console.WriteLine("2) Buy Lucky Seed (15 coins)");
-        Console.WriteLine("3) Sell Items");
-        Console.WriteLine("ESC) Exit");
+        string filename = _character.Name + ".txt";
+        Character.PlayerInventory.SaveToFile(filename);
 
-        while (true)
-        {
-            var key = Console.ReadKey(true).Key;
-            if (key == ConsoleKey.Escape) return;
-
-            if (key == ConsoleKey.D1)
-            {
-                if (Character.PlayerInventory.BuyItem("Seed", 3))
-                    Console.WriteLine("Bought a seed.");
-            }
-            else if (key == ConsoleKey.D2)
-            {
-                if (Character.PlayerInventory.BuyItem("LuckySeed", 15))
-                    Console.WriteLine("Bought a lucky seed.");
-            }
-            else if (key == ConsoleKey.D3)
-            {
-                Character.PlayerInventory.SellMenu();
-            }
-        }
+        Console.SetCursorPosition(0, 12);
+        Console.WriteLine("Game saved.");
     }
+
 
     private Tile GetTile(int x, int y)
     {
@@ -161,5 +154,36 @@ public class Map
 
         if (t is Gate gate)
             gate.Leave();
+    }
+
+    private void Shop()
+    {
+        Console.Clear();
+        Console.WriteLine("SHOP");
+        Console.WriteLine("1) Buy Seed (3 coins)");
+        Console.WriteLine("2) Buy Lucky Seed (15 coins)");
+        Console.WriteLine("3) Sell Items");
+        Console.WriteLine("ESC) Exit");
+
+        while (true)
+        {
+            var key = Console.ReadKey(true).Key;
+            if (key == ConsoleKey.Escape) return;
+
+            if (key == ConsoleKey.D1)
+            {
+                if (Character.PlayerInventory.BuyItem("Seed", 3))
+                    Console.WriteLine("Bought a seed.");
+            }
+            else if (key == ConsoleKey.D2)
+            {
+                if (Character.PlayerInventory.BuyItem("LuckySeed", 15))
+                    Console.WriteLine("Bought a lucky seed.");
+            }
+            else if (key == ConsoleKey.D3)
+            {
+                Character.PlayerInventory.SellMenu();
+            }
+        }
     }
 }

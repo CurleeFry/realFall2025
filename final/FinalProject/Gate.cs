@@ -9,7 +9,7 @@ public class Gate : Tile
 
     public override void Display()
     {
-        Console.Write("G");
+        Console.Write("=");
     }
 
     public void Leave()
